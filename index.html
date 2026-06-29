@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>XAU Root Calculator Pro</title>
+
+<style>
+
+body{
+background:#0d1117;
+font-family:Arial;
+color:white;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:520px;
+margin:auto;
+}
+
+.card{
+background:#161b22;
+padding:20px;
+border-radius:15px;
+margin-bottom:15px;
+box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+h2{
+text-align:center;
+color:gold;
+}
+
+label{
+display:block;
+margin-top:15px;
+margin-bottom:5px;
+}
+
+input{
+width:100%;
+padding:12px;
+font-size:18px;
+border-radius:8px;
+border:none;
+background:#21262d;
+color:white;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:15px;
+font-size:18px;
+margin-top:20px;
+background:gold;
+border:none;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.result{
+margin-top:15px;
+padding:15px;
+background:#21262d;
+border-radius:10px;
+}
+
+.buy{
+color:#00ff7f;
+font-size:22px;
+font-weight:bold;
+}
+
+.sell{
+color:#ff5555;
+font-size:22px;
+font-weight:bold;
+}
+
+table{
+width:100%;
+margin-top:10px;
+border-collapse:collapse;
+}
+
+td{
+padding:8px;
+border-bottom:1px solid #333;
+}
+
+.green{
+color:#00ff7f;
+}
+
+.red{
+color:#ff5555;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h2>XAU ROOT CALCULATOR</h2>
+
+<label>Previous High</label>
+<input id="high" type="number" step="0.01">
+
+<label>Previous Low</label>
+<input id="low" type="number" step="0.01">
+
+<label>Current Price</label>
+<input id="price" type="number" step="0.01">
+
+<button onclick="calc()">HITUNG</button>
+
+</div>
+
+<div class="card">
+
+<div id="bias" class="buy"></div>
+
+<div class="result">
+
+<b>BUY TARGET</b>
+
+<div id="buyTarget"></div>
+
+<br>
+
+<b>SELL TARGET</b>
+
+<div id="sellTarget"></div>
+
+</div>
+
+<div class="result">
+
+<b>Trade Plan</b>
+
+<table>
+
+<tr>
+<td>Entry</td>
+<td id="entry"></td>
+</tr>
+
+<tr>
+<td>TP</td>
+<td id="tp"></td>
+</tr>
+
+<tr>
+<td>SL</td>
+<td id="sl"></td>
+</tr>
+
+<tr>
+<td>Risk Reward</td>
+<td id="rr"></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="result">
+
+<b>Fibonacci</b>
+
+<table>
+
+<tr><td>23.6%</td><td id="f236"></td></tr>
+<tr><td>38.2%</td><td id="f382"></td></tr>
+<tr><td>50%</td><td id="f50"></td></tr>
+<tr><td>61.8%</td><td id="f618"></td></tr>
+<tr><td>78.6%</td><td id="f786"></td></tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const k=0.175;
+
+function calc(){
+
+let high=parseFloat(document.getElementById("high").value);
+let low=parseFloat(document.getElementById("low").value);
+let price=parseFloat(document.getElementById("price").value);
+
+if(isNaN(high)||isNaN(low)||isNaN(price)){
+
+alert("Lengkapi semua data.");
+
+return;
+
+}
+
+let buy=Math.pow(Math.sqrt(low)+k,2);
+
+let sell=Math.pow(Math.sqrt(high)-k,2);
+
+document.getElementById("buyTarget").innerHTML=
+buy.toFixed(2);
+
+document.getElementById("sellTarget").innerHTML=
+sell.toFixed(2);
+
+let dHigh=Math.abs(high-price);
+let dLow=Math.abs(price-low);
+
+let bias="";
+let entry,tp,sl,rr;
+
+if(dLow<dHigh){
+
+bias="🟢 BIAS BUY";
+
+entry=low.toFixed(2);
+
+tp=buy.toFixed(2);
+
+sl=(low-5).toFixed(2);
+
+let risk=entry-sl;
+let reward=tp-entry;
+
+rr=(reward/risk).toFixed(2);
+
+document.getElementById("bias").className="buy";
+
+}else{
+
+bias="🔴 BIAS SELL";
+
+entry=high.toFixed(2);
+
+tp=sell.toFixed(2);
+
+sl=(high+5).toFixed(2);
+
+let risk=sl-entry;
+let reward=entry-tp;
+
+rr=(reward/risk).toFixed(2);
+
+document.getElementById("bias").className="sell";
+
+}
+
+document.getElementById("bias").innerHTML=bias;
+
+document.getElementById("entry").innerHTML=entry;
+
+document.getElementById("tp").innerHTML=tp;
+
+document.getElementById("sl").innerHTML=sl;
+
+document.getElementById("rr").innerHTML="1 : "+rr;
+
+let range=high-low;
+
+document.getElementById("f236").innerHTML=(high-range*0.236).toFixed(2);
+
+document.getElementById("f382").innerHTML=(high-range*0.382).toFixed(2);
+
+document.getElementById("f50").innerHTML=(high-range*0.5).toFixed(2);
+
+document.getElementById("f618").innerHTML=(high-range*0.618).toFixed(2);
+
+document.getElementById("f786").innerHTML=(high-range*0.786).toFixed(2);
+
+}
+
+</script>
+
+</body>
+</html>
